@@ -1,7 +1,7 @@
 # Vue的内部指令
 * helloworld实例
-* v-if/v-else/v-show
-*
+* v-if/v-else/v-show实例
+* v-for实例
 *
 ---
 
@@ -54,3 +54,108 @@ CDN地址：
 但是`v-if`和`v-show`又有所不同：
 `v-if`用来判断是否加载`html`的`DOM`,可以减轻服务器的压力，在需要时加载。<br>
 `v-show`:相当于我们`CSS`中的`display`属性，可以使客户端操作起来更加流畅。
+
+---
+## v-for
+都知道`v-for`是要循环的内容，所以下面将自己介绍一下`v-for`实例<br>
+ `03_v-for.html`实例
+ ```javascript
+    <div id="app">
+        <ul>
+            <li v-for="item in items">
+        </ul>
+    </div>
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            items: [20,30,90,67,89]
+        }
+    })
+    // 20 
+    // 30
+    // 90
+    // 67
+    // 89
+ ```
+ 这里要注意的是，有`JS`有所不同的是`v-for`标签当你要作用与谁就直接在该元素的本身，而不是它的父级。这里的`v-for`是想让`li`元素循环实现`items`的展示，所以要作用与`li`元素的本身。<br>
+ 如果想要实现顺序排序该怎么做：
+ ```
+    var app = new Vue({
+            el:'#app',
+            data: {
+                items: [20,10,90,78,50]
+            },
+            computed:{
+                sortItems: function(){
+                    return this.items.sort()
+                }
+            }
+        })
+
+        // 10
+        // 20
+        // 50
+        // 78
+        // 90
+ ```
+ 我们在computed里新声明了一个对象sortItems，如果不重新声明会污染原来的数据源，这是Vue不允许的，所以你要重新声明一个对象。
+
+
+ 这样表面上看起来是可行的，但是会有一个潜在的bug，而这个bug是从js出生以来就有了而且没有消失。例如：10，30，4，50的顺序排序应该是4，10，30，50.而在JS中展示的则是：10，30，4，50，所以想要改变这个bug我们需要手动的写一个函数：
+ ```
+    function sortNumber(a,b){
+        return a-b;
+    }
+ ```
+ 使用方法：
+ ```
+    computed: {
+        sortItems:funtion(){
+            return this.items.sort(sortNumber)
+        }
+    }
+ ```
+ ### 对象中循环输出
+ 如果是对象元素我们应该怎么实现循环输出，结果其实类似：
+ ```javascript
+    <ul>
+        <li v-for="(student,index) in students">
+        {{index+1}}{{ student.name}} :{{student.age}}
+        </li>
+    </ul>
+
+    data: {
+        students:[
+            {name:'baby',age:'1'},
+            {name:'children',age:'12'},
+            {name:'youth',age:'21'},
+            {name:'old',age:'50'},       
+        ]
+    }
+
+    // 1 baby: 1
+    // 2 children: 12
+    // 3 youth: 21
+    // 4 old: 50
+ ```
+ 那么如何实现对象元素的排序呢？如前面类似你要实现写一个函数：
+```
+//数组对象方法排序:
+function sortByKey(array,key){
+    return array.sort(function(a,b){
+      var x=a[key];
+      var y=b[key];
+      return ((x<y)?-1:((x>y)?1:0));
+   });
+}
+```
+有了对象排序你可以在`computed`写入以下：
+```
+    computed: {
+        sortStudent: function(){
+            return sortByKey(this.student,'age')
+        }
+    }
+```
+这样就可以完整的实现对象元素的顺序排序了。
