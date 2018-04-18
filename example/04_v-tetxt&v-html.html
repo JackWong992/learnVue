@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>    
+</head>
+<body>
+   <h1>v-text/v-html实例</h1> 
+   <hr>
+   <div id="app">
+       <span>这是通过message展示的：{{message}}</span> <br>
+       这是通过v-text展示的：<span v-text="sayWhere"></span><br>
+      这是通过v-html展示的：<span v-html="doSomeThing"></span>
+   </div>
+   <script>
+       var app = new Vue({
+           el:'#app',
+           data:{
+               message: 'hello world',
+               sayWhere:'你好，世界',
+               doSomeThing:'你好这个世界'
+           }
+       })
+   </script>
+</body>
+</html>

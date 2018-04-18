@@ -2,7 +2,7 @@
 * helloworld实例
 * v-if/v-else/v-show实例
 * v-for实例
-*
+* v-text和v-html实例
 ---
 
 ## helloworld实例
@@ -159,3 +159,96 @@ function sortByKey(array,key){
     }
 ```
 这样就可以完整的实现对象元素的顺序排序了。
+
+---
+## v-text、v-html实例
+在第一小节中我们展示了`helloworld`的书写，但是在项目中实现这种`message`的展现比较少，因为当网速较慢的情况下或者当代码发生错误的时候，页面会出现`{{message}}`给用户的感觉非常突兀。在下面我们展示一下两种比较友好的方式：<br>
+
+04.`v-text`、`v-html`:
+```javascript
+     <div id="app">
+       <span>这是通过message展示的：{{message}}</span> <br>
+      这是通过v-text展示的：<span v-text="sayWhere"></span><br>
+      这是通过v-html展示的：<span v-html="doSomeThing"></span>
+   </div>
+   <script>
+       var app = new Vue({
+           el:'#app',
+           data:{
+               message: 'hello world',
+               sayWhere:'你好，世界',
+               doSomeThing:'你好这个世界'
+           }
+       })
+   </script>
+```
+第一种就是最简单的`message`展示<br>
+第二种使用最广泛的通过`v-text`展示<br>
+第三张通过对代码进行编译进行展示<br>
+上述都是对文本内容的展示，在实际开发中尽量多使用`v-text`，如果后面的代码出现错误，或者网速较慢`sayWhere`内容将不会被展示。
+而对`v-html`来说，要慎用，特别是在提交表单的时候：因为会引起不必要的`xss`攻击
+
+---
+
+## v-on实例
+v-on实例有点类似于我们学习`jQuery`中的绑定时间，这里的`v-on`也是监听一种事件，v可以用v-on指令监听DOM事件来触发一些javascript代码
+
+05_v-on实例演示：
+```javascript
+
+    <div id="app">
+        本场比赛得分：{{score}}
+        <p>
+            <button v-on:click="add">加分</button>
+            <button v-on:click="del">减分</button>
+        </p>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                score: 0;
+            },
+            methods:{
+                add:function(){
+                    this.score++;
+                },
+                del:function(){
+                    this.score--;
+                }
+            }
+        })
+    </script>
+```
+点击加分按钮就会监听一个加分的事件，点击减分就会监听一个减分的事件。
+
+那如何实现自定义事件呢：
+```javascript
+自定义加分，点击键盘按键得到结果：<br>
+<input type="text" v-on:keyup.13="custom_add" v-model="score2">
+左边输入框输入你想自定义加的分数，点击enter就可以实现
+
+var app = new Vue({
+    el: '#app',
+    data: {
+        score: 0;
+        score2: 1;
+    },
+    methods:{
+        add:function(){
+            this.score++;
+        },
+        del:function(){
+            this.score--;
+        },
+        custom_add:function(){
+            this.score = this.score+parseInt(this.score2);
+        }
+    }
+})
+```
+![20170227001137.jpg](https://i.loli.net/2018/04/18/5ad6abafc13eb.jpg)
+
+注意在键盘中`enter`对应的`keycode`是13。<br>
+所以绑定的是13，也可以写`enter`,还有一点要注意的是在js代码中加法要注意转换，负责就是字符串相加了。

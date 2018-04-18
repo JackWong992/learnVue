@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>    
+</head>
+<body>
+    <h1>v-on实例展示</h1>
+    <hr>
+    <div id="app">
+        本场比赛得分：{{score}}<br>
+        <p>
+           <button v-on:click="add">加分</button>
+           <button v-on:click="del">减分</button>
+        </p>
+        自定义加分，点击键盘按键得到结果：<br>
+        <input type="text" v-on:keyup.13="custom_add" v-model="score2">
+        左边输入框输入你想自定义加的分数，点击enter就可以实现
+    </div>
+    <script>
+        var app = new Vue({
+            el:'#app',
+            data:{
+                score: 0,
+                score2: 1
+            },
+            methods:{
+                add: function(){
+                    this.score++;
+                },
+                del: function(){
+                    this.score--;
+                },
+                custom_add: function(){
+                    this.score = this.score+parseInt(this.score2);
+                }
+            }
+        })
+    </script>
+</body>
+</html>
